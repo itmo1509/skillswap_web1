@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillSwap — Биржа навыков для подростков</title>
+    <meta name="description" content="Безопасная экосистема микро-задач и обмена навыками для подростков">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --accent: #8b5cf6;
+            --dark: #0f172a;
+            --dark-light: #1e293b;
+            --light: #f8fafc;
+            --gray: #94a3b8;
+            --gradient: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        html { scroll-behavior: smooth; }
+        body { background-color: var(--dark); color: var(--light); line-height: 1.6; overflow-x: hidden; }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .section { padding: 100px 0; }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto 60px auto;
+            font-size: 1.1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 30px rgba(99, 102, 241, 0.6);
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { color: var(--gray); font-size: 0.95rem; }
+        .nav-links a:hover { color: var(--primary); }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(236, 72, 153, 0.15) 0%, transparent 50%),
+                var(--dark);
+            padding-top: 70px;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            margin-bottom: 25px;
+            font-weight: 800;
+        }
+
+        .hero-content h1 span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-content p {
+            font-size: 1.25rem;
+            color: var(--gray);
+            max-width: 800px;
+            margin: 0 auto 40px auto;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* About */
+        .about { background: var(--dark-light); }
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            align-items: center;
+        }
+        .about-text h3 { font-size: 1.8rem; margin-bottom: 20px; color: var(--primary); }
+        .about-text p { color: var(--gray); margin-bottom: 15px; font-size: 1.05rem; }
+        
+        .about-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stat-label { color: var(--gray); font-size: 0.9rem; margin-top: 5px; }
+
+        /* Advantages */
+        .advantages { background: var(--dark); }
+        .advantages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .advantage-card {
+            background: rgba(255,255,255,0.03);
+            padding: 35px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .advantage-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 3px;
+            background: var(--gradient);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        .advantage-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .advantage-card:hover::before { transform: scaleX(1); }
+        .advantage-icon { font-size: 3rem; margin-bottom: 20px; display: block; }
+        .advantage-card h3 { font-size: 1.4rem; margin-bottom: 15px; color: var(--light); }
+        .advantage-card p { color: var(--gray); font-size: 1rem; line-height: 1.7; }
+
+        /* Comparison */
+        .comparison { background: var(--dark-light); }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255,255,255,0.03);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .comparison-table th, .comparison-table td {
+            padding: 20px 25px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .comparison-table th {
+            background: rgba(99, 102, 241, 0.2);
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        .comparison-table th:first-child { text-align: left; background: rgba(255,255,255,0.05); }
+        .comparison-table td:first-child { text-align: left; font-weight: 600; background: rgba(255,255,255,0.03); }
+        .comparison-table tr:last-child td { border-bottom: none; }
+        .comparison-table tr:hover { background: rgba(255,255,255,0.05); }
+        
+        .check { color: #10b981; font-size: 1.3rem; }
+        .cross { color: #ef4444; font-size: 1.3rem; }
+        .partial { color: #f59e0b; font-size: 1.3rem; }
+        .skillswap-col {
+            background: rgba(99, 102, 241, 0.1) !important;
+            border-left: 2px solid var(--primary);
+            border-right: 2px solid var(--primary);
+        }
+
+        /* Skills */
+        .skills { background: var(--dark); }
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .skill-tag {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: 0.3s;
+            cursor: default;
+        }
+        .skill-tag:hover {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+        .skill-icon { font-size: 2.5rem; margin-bottom: 10px; display: block; }
+        .skill-name { color: var(--light); font-weight: 600; }
+
+        /* Safety */
+        .safety {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
+            text-align: center;
+        }
+        .safety-box {
+            background: rgba(255,255,255,0.05);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .safety-icon { font-size: 4rem; margin-bottom: 20px; display: block; }
+        .safety-box h3 { font-size: 1.8rem; margin-bottom: 20px; color: var(--light); }
+        .safety-box p { color: var(--gray); font-size: 1.1rem; line-height: 1.8; margin-bottom: 15px; }
+        .safety-features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .safety-feature {
+            background: rgba(99, 102, 241, 0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            color: var(--light);
+        }
+
+        /* CTA */
+        .cta { background: var(--dark-light); text-align: center; }
+        .cta-box {
+            background: var(--gradient);
+            padding: 60px 40px;
+            border-radius: 25px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .cta-box h2 { font-size: 2.5rem; margin-bottom: 20px; color: white; }
+        .cta-box p { font-size: 1.2rem; color: rgba(255,255,255,0.9); margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto; }
+        .cta-btn {
+            background: white;
+            color: var(--primary);
+            padding: 18px 50px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        .cta-btn:hover { transform: scale(1.05); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+
+        /* Footer */
+        footer {
+            background: #020617;
+            padding: 50px 0 30px 0;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        .footer-section h4 { color: var(--light); font-size: 1.2rem; margin-bottom: 20px; }
+        .footer-section p, .footer-section a { color: var(--gray); font-size: 0.95rem; line-height: 2; display: block; }
+        .footer-section a:hover { color: var(--primary); }
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 2.5rem; }
+            .hero-content p { font-size: 1rem; }
+            .nav-links { display: none; }
+            .section-title { font-size: 2rem; }
+            .comparison-table { font-size: 0.85rem; }
+            .comparison-table th, .comparison-table td { padding: 15px 10px; }
+            .cta-box h2 { font-size: 2rem; }
+            .about-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate { animation: fadeInUp 0.6s ease forwards; }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">⚡ SkillSwap</div>
+                <ul class="nav-links">
+                    <li><a href="#about">О проекте</a></li>
+                    <li><a href="#advantages">Преимущества</a></li>
+                    <li><a href="#comparison">Сравнение</a></li>
+                    <li><a href="#safety">Безопасность</a></li>
+                </ul>
+                <a href="https://itmo1509.github.io/skillswap_app/" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Начать</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h1 class="animate">⚡ SkillSwap ⚡</h1>
+            <p class="animate">
+                Это безопасная экосистема микро-задач и обмена навыками, созданная специально для подростков. 
+                В отличие от взрослых фриланс-бирж, здесь нет жестких требований к резюме. 
+                Главный актив — портфолио и рейтинг. Платформа позволяет монетизировать хобби 
+                (монтаж, дизайн, код, репетиторство) и получать взамен деньги или новые знания.
+            </p>
+            <div class="hero-buttons animate">
+                <a href="https://itmo1509.github.io/skillswap_app/" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                    🚀 Приступить к работе!
+                </a>
+                <a href="#comparison" class="btn" style="background: rgba(255,255,255,0.1); color: white;">📊 Сравнить с другими</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section about">
+        <div class="container">
+            <h2 class="section-title">Что такое SkillSwap?</h2>
+            <p class="section-subtitle">
+                Платформа позволяет монетизировать хобби и получать взамен деньги или новые знания
+            </p>
+            
+            <div class="about-grid">
+                <div class="about-text">
+                    <h3>🎯 Наша миссия</h3>
+                    <p>
+                        Мы создали пространство, где подростки могут безопасно развивать свои навыки, 
+                        находить первые заказы и строить портфолио без давления взрослых платформ.
+                    </p>
+                    <p>
+                        Платформа поддерживает различные направления: монтаж видео, графический дизайн, 
+                        программирование, репетиторство, копирайтинг и многое другое.
+                    </p>
+                    <p>
+                        💡 <strong>Уникальная особенность:</strong> Вы можете не только зарабатывать деньги, 
+                        но и обмениваться навыками с другими участниками платформы.
+                    </p>
+                </div>
+                
+                <div class="about-stats">
+                    <div class="stat-card">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Безопасность данных</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">0₽</div>
+                        <div class="stat-label">Комиссия платформы</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">∞</div>
+                        <div class="stat-label">Возможностей</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Доступ к заданиям</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Advantages Section -->
+    <section id="advantages" class="section advantages">
+        <div class="container">
+            <h2 class="section-title">Наши преимущества</h2>
+            <p class="section-subtitle">
+                Почему подростки выбирают SkillSwap вместо взрослых фриланс-бирж
+            </p>
+            
+            <div class="advantages-grid">
+                <div class="advantage-card">
+                    <span class="advantage-icon">📂</span>
+                    <h3>Портфолио важнее резюме</h3>
+                    <p>
+                        Не нужно писать скучные биографии и подтверждать опыт работы. 
+                        Просто покажи свои работы — и заказчики сами найдут тебя. 
+                        Твои навыки говорят за себя.
+                    </p>
+                </div>
+                
+                <div class="advantage-card">
+                    <span class="advantage-icon">🛡️</span>
+                    <h3>Безопасная среда</h3>
+                    <p>
+                        Все данные хранятся только в вашем браузере. 
+                        Мы не собираем и не передаём информацию третьим лицам. 
+                        Модерация заданий защищает от мошенников.
+                    </p>
+                </div>
+                
+                <div class="advantage-card">
+                    <span class="advantage-icon">🤝</span>
+                    <h3>Обмен навыками</h3>
+                    <p>
+                        Нет денег? Предложи обмен! Научи кого-то рисовать в обмен на урок программирования. 
+                        Платформа поддерживает как денежную оплату, так и бартер знаниями.
+                    </p>
+                </div>
+                
+                <div class="advantage-card">
+                    <span class="advantage-icon">📈</span>
+                    <h3>Система рейтингов</h3>
+                    <p>
+                        Честные отзывы и прозрачная система рейтингов помогают найти надёжных 
+                        исполнителей и заказчиков. Твоя репутация растёт с каждым выполненным заданием.
+                    </p>
+                </div>
+                
+                <div class="advantage-card">
+                    <span class="advantage-icon">🎨</span>
+                    <h3>Любые навыки</h3>
+                    <p>
+                        Видеомонтаж, дизайн логотипов, помощь с кодом, репетиторство, 
+                        перевод текстов, SMM — монетизируй любое своё увлечение.
+                    </p>
+                </div>
+                
+                <div class="advantage-card">
+                    <span class="advantage-icon">⚡</span>
+                    <h3>Быстрый старт</h3>
+                    <p>
+                        Регистрация за 1 минуту. Никаких сложных верификаций и ожиданий. 
+                        Создай профиль, загрузи портфолио и начни искать заказы сразу.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Section -->
+    <section id="comparison" class="section comparison">
+        <div class="container">
+            <h2 class="section-title">SkillSwap vs Другие платформы</h2>
+            <p class="section-subtitle">
+                Узнайте, чем мы отличаемся от взрослых фриланс-бирж
+            </p>
+            
+            <div style="overflow-x: auto;">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Критерий</th>
+                            <th class="skillswap-col">⚡ SkillSwap</th>
+                            <th>Взрослые биржи</th>
+                            <th>Соцсети</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Для подростков</td>
+                            <td class="skillswap-col"><span class="check">✓</span> Специально создан</td>
+                            <td><span class="cross">✗</span> 18+</td>
+                            <td><span class="partial">~</span> Не специализировано</td>
+                        </tr>
+                        <tr>
+                            <td>Требования к резюме</td>
+                            <td class="skillswap-col"><span class="check">✓</span> Не нужно</td>
+                            <td><span class="cross">✗</span> Обязательно</td>
+                            <td><span class="partial">~</span> По желанию</td>
+                        </tr>
+                        <tr>
+                            <td>Главный актив</td>
+                            <td class="skillswap-col">Портфолио + Рейтинг</td>
+                            <td>Опыт + Резюме</td>
+                            <td>Подписчики</td>
+                        </tr>
+                        <tr>
+                            <td>Безопасность данных</td>
+                            <td class="skillswap-col"><span class="check">✓</span> Хранение в браузере</td>
+                            <td><span class="cross">✗</span> На серверах компании</td>
+                            <td><span class="cross">✗</span> Сбор данных</td>
+                        </tr>
+                        <tr>
+                            <td>Комиссия</td>
+                            <td class="skillswap-col"><span class="check">✓</span> 0%</td>
+                            <td><span class="cross">✗</span> 10-30%</td>
+                            <td><span class="check">✓</span> Бесплатно</td>
+                        </tr>
+                        <tr>
+                            <td>Обмен навыками</td>
+                            <td class="skillswap-col"><span class="check">✓</span> Поддерживается</td>
+                            <td><span class="cross">✗</span> Только деньги</td>
+                            <td><span class="partial">~</span> Неформально</td>
+                        </tr>
+                        <tr>
+                            <td>Модерация</td>
+                            <td class="skillswap-col"><span class="check">✓</span> Все задания</td>
+                            <td><span class="partial">~</span> Частичная</td>
+                            <td><span class="cross">✗</span> Отсутствует</td>
+                        </tr>
+                        <tr>
+                            <td>Поддержка сообщества</td>
+                            <td class="skillswap-col"><span class="check">✓</span> Подростковое</td>
+                            <td><span class="cross">✗</span> Взрослое</td>
+                            <td><span class="partial">~</span> Смешанное</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="section skills">
+        <div class="container">
+            <h2 class="section-title">Популярные навыки</h2>
+            <p class="section-subtitle">
+                Что можно предлагать и искать на платформе
+            </p>
+            
+            <div class="skills-grid">
+                <div class="skill-tag"><span class="skill-icon">🎬</span><span class="skill-name">Видеомонтаж</span></div>
+                <div class="skill-tag"><span class="skill-icon">🎨</span><span class="skill-name">Графический дизайн</span></div>
+                <div class="skill-tag"><span class="skill-icon">💻</span><span class="skill-name">Программирование</span></div>
+                <div class="skill-tag"><span class="skill-icon">📚</span><span class="skill-name">Репетиторство</span></div>
+                <div class="skill-tag"><span class="skill-icon">✍️</span><span class="skill-name">Копирайтинг</span></div>
+                <div class="skill-tag"><span class="skill-icon">📱</span><span class="skill-name">SMM и продвижение</span></div>
+                <div class="skill-tag"><span class="skill-icon">🎵</span><span class="skill-name">Аудиомонтаж</span></div>
+                <div class="skill-tag"><span class="skill-icon">🌐</span><span class="skill-name">Переводы</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Safety Section -->
+    <section id="safety" class="section safety">
+        <div class="container">
+            <div class="safety-box">
+                <span class="safety-icon">🔒</span>
+                <h3>Твоя безопасность — наш приоритет</h3>
+                <p>
+                    В разработке. Все ваши данные хранятся только в вашем браузере.
+                    Мы не собираем и не передаём информацию третьим лицам.
+                </p>
+                <p>
+                    <strong>Техническая защита:</strong> Все личные данные хранятся только 
+                    в вашем браузере (Local Storage). Мы не имеем доступа к вашим паролям 
+                    и личной информации.
+                </p>
+                
+                <div class="safety-features">
+                    <span class="safety-feature">🔐 Локальное хранение</span>
+                    <span class="safety-feature">👁️ Модерация заданий</span>
+                    <span class="safety-feature">⭐ Система рейтингов</span>
+                    <span class="safety-feature">🚫 Блокировка нарушителей</span>
+                    <span class="safety-feature">📞 Поддержка</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section cta" id="cta">
+        <div class="container">
+            <div class="cta-box">
+                <h2>Готов начать зарабатывать на своих навыках?</h2>
+                <p>
+                    Присоединяйся к SkillSwap прямо сейчас. 
+                    Регистрация займёт всего 1 минуту, а первые заказы ты сможешь найти уже сегодня!
+                </p>
+                <!-- Кнопка с перенаправлением на приложение -->
+                <a href="https://itmo1509.github.io/skillswap_app/" class="cta-btn" target="_blank" rel="noopener noreferrer">
+                    🚀 Зарегистрироваться бесплатно
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>⚡ SkillSwap</h4>
+                    <p>Безопасная экосистема микро-задач и обмена навыками для подростков</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Навигация</h4>
+                    <a href="#about">О проекте</a>
+                    <a href="#advantages">Преимущества</a>
+                    <a href="#comparison">Сравнение</a>
+                    <a href="#safety">Безопасность</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Информация</h4>
+                    <a href="#">Политика конфиденциальности</a>
+                    <a href="#">Условия использования</a>
+                    <a href="#">Поддержка</a>
+                    <a href="#">Контакты</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Навыки</h4>
+                    <a href="#">Видеомонтаж</a>
+                    <a href="#">Дизайн</a>
+                    <a href="#">Программирование</a>
+                    <a href="#">Репетиторство</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 SkillSwap. Все права защищены.</p>
+                <p style="margin-top: 10px; font-size: 0.8rem; opacity: 0.5;">
+                    Политика конфиденциальности в разработке
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Animation on scroll
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.advantage-card, .skill-tag, .stat-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
